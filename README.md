@@ -1,10 +1,20 @@
 # PostgreSQL Health Monitor
 
-Первый Небольшой проект для мониторинга состояния PostgreSQL.
+Описание проекта
 
-## Checks
+## Features
 
-- Active queries
-- Database sizes
-- Table sizes
-- Waiting locks
+- Active sessions monitoring
+- Database size analysis
+- Table size analysis
+- Lock detection
+
+## Technologies
+
+- PostgreSQL
+- SQL
+- DBeaver
+- Git/GitHub
+
+## Project structure
+
