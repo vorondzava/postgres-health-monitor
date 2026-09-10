@@ -1,0 +1,1 @@
+print("PostgreSQL Health Monitor started")
