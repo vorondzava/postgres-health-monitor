@@ -2,9 +2,11 @@ from database import get_connection
 from monitor import (
     get_active_connections,
     get_database_size,
-    get_active_queries
+    get_active_queries,
+    get_locks
 )
 from report import (
+    print_locks,
     print_report,
     print_active_queries
 )
@@ -17,3 +19,6 @@ print_report(active,size)
 
 queries = get_active_queries(connection)
 print_active_queries(queries)
+
+locks = get_locks(connection)
+print_locks(locks)
