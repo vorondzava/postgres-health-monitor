@@ -1,16 +1,14 @@
 def execute_one(connection, query):
-    cursor = connection.cursor() #создаём объект, который будет выполнять SQL-команды через соединение.
-    cursor.execute(query)#передаем запрос
-    result = cursor.fetchone() #получаем одну строку результата
-    cursor.close()
-    return result[0]
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        result = cursor.fetchone() 
+        return result[0]
 
 def execute_all(connection, query):
-    cursor = connection.cursor() #создаём объект, который будет выполнять SQL-команды через соединение.
-    cursor.execute(query)#передаем запрос
-    result = cursor.fetchall() #получаем все строки результата
-    cursor.close()
-    return result
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        result = cursor.fetchall() 
+        return result
 
 def get_active_connections(connection):
     return execute_one(
