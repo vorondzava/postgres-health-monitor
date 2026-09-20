@@ -1,3 +1,9 @@
+def load_sql(filename):
+    with open(filename) as file:
+        content = file.read()
+        return content
+
+
 def execute_one(connection, query):
     with connection.cursor() as cursor:
         cursor.execute(query)
@@ -27,17 +33,10 @@ def get_database_size(connection):
     )
 
 def get_active_queries(connection):
+    query = load_sql("sql/activity.sql")
     return execute_all(
             connection,
-            """
-            SELECT
-            pid,
-            usename,
-            query,
-            query_start
-            FROM pg_stat_activity
-            WHERE state = 'active';
-            """
+            query
         )
 
 def get_locks(connection):
