@@ -28,6 +28,21 @@ def print_active_queries(queries):
         print(f"Started: {query_start}")
         print()
 
+def print_table_sizes(table_sizes):
+    print("============================")
+    print("Table sizes:")
+    print("============================")
+    if not table_sizes:
+        print("No table sizes")
+        return
+    
+    for schemaname, tablename, size in table_sizes:
+        print("----------------------------")
+        print(f"Schema:  {schemaname}")
+        print(f"Table: {tablename}")
+        print(f"Size: {size}")
+        print()
+
 def print_locks(locks):
     print("============================")
     print("Locks:")

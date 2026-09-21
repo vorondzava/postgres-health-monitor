@@ -39,6 +39,13 @@ def get_active_queries(connection):
             query
         )
 
+def get_table_sizes(connection):
+    query = load_sql("sql/table_size.sql")
+    return execute_all(
+            connection,
+            query
+        )
+
 def get_locks(connection):
 
     return execute_all(

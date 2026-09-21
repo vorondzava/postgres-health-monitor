@@ -3,12 +3,14 @@ from monitor import (
     get_active_connections,
     get_database_size,
     get_active_queries,
-    get_locks
+    get_locks,
+    get_table_sizes
 )
 from report import (
     print_locks,
     print_report,
-    print_active_queries
+    print_active_queries,
+    print_table_sizes
 )
 
 connection = get_connection() #Получаем подключение
@@ -22,3 +24,6 @@ print_active_queries(queries)
 
 locks = get_locks(connection)
 print_locks(locks)
+
+table_sizes = get_table_sizes(connection)
+print_table_sizes(table_sizes)

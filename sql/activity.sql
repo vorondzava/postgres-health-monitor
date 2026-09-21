@@ -1,6 +1,6 @@
 SELECT
+    pid,
     usename,
-    datname,
     query,
     query_start
 FROM pg_stat_activity
