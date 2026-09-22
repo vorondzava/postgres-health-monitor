@@ -13,17 +13,25 @@ from report import (
     print_table_sizes
 )
 
-connection = get_connection() #Получаем подключение
 
-active = get_active_connections(connection) #Передаём его в мониторинг
-size = get_database_size(connection)
-print_report(active,size)
+def run_monitor():
+    connection = get_connection() #Получаем подключение
+    if connection is None:
+        print("Could not connect to database")
+        return
 
-queries = get_active_queries(connection)
-print_active_queries(queries)
+    active = get_active_connections(connection) #Передаём его в мониторинг
+    size = get_database_size(connection)
+    print_report(active,size)
 
-locks = get_locks(connection)
-print_locks(locks)
+    queries = get_active_queries(connection)
+    print_active_queries(queries)
 
-table_sizes = get_table_sizes(connection)
-print_table_sizes(table_sizes)
+    locks = get_locks(connection)
+    print_locks(locks)
+
+    table_sizes = get_table_sizes(connection)
+    print_table_sizes(table_sizes)
+
+
+run_monitor()
