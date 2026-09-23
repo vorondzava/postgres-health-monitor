@@ -14,7 +14,7 @@ def get_connection():
             password=os.getenv("DB_PASSWORD")
         )
         return connection #момент передачи
-    except Exception as error:
-        print("error")
+    except psycopg.OperationalError as error:
+        print(error)
         return None
-        #exit() - лучше потом добавить для выхода
+        

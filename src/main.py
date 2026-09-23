@@ -15,23 +15,27 @@ from report import (
 
 
 def run_monitor():
-    connection = get_connection() #Получаем подключение
-    if connection is None:
-        print("Could not connect to database")
-        return
+    try:
+        connection = get_connection() #Получаем подключение
+        if connection is None:
+            print("Could not connect to database")
+            return
 
-    active = get_active_connections(connection) #Передаём его в мониторинг
-    size = get_database_size(connection)
-    print_report(active,size)
+        active = get_active_connections(connection) #Передаём его в мониторинг
+        size = get_database_size(connection)
+        print_report(active,size)
 
-    queries = get_active_queries(connection)
-    print_active_queries(queries)
+        queries = get_active_queries(connection)
+        print_active_queries(queries)
 
-    locks = get_locks(connection)
-    print_locks(locks)
+        locks = get_locks(connection)
+        print_locks(locks)
 
-    table_sizes = get_table_sizes(connection)
-    print_table_sizes(table_sizes)
+        table_sizes = get_table_sizes(connection)
+        print_table_sizes(table_sizes)
+    finally:
+        if connection is not None:
+            connection.close()
 
 
 run_monitor()
