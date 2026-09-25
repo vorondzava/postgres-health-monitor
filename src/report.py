@@ -15,7 +15,7 @@ def print_active_queries(queries):
         print("No active queries")
         return
     
-    for pid, user, sql, query_start in queries:
+    for pid, user, sql, query_start, duration in queries:
 
         if len(sql) > 100:
             sql = sql[:100] + "..."
@@ -26,7 +26,31 @@ def print_active_queries(queries):
         print(f"User: {user}")
         print(f"Query: {sql}")
         print(f"Started: {query_start}")
+        print(f"Duration: {duration}")
         print()
+
+def print_long_running_queries(queries):
+    print("============================")
+    print("Long-running queries:")
+    print("============================")
+    if not queries:
+        print("No long-running queries")
+        return
+    
+    for pid, user, sql, query_start, duration in queries:
+
+        if len(sql) > 100:
+            sql = sql[:100] + "..."
+
+
+        print("----------------------------")
+        print(f"PID:  {pid}")
+        print(f"User: {user}")
+        print(f"Query: {sql}")
+        print(f"Started: {query_start}")
+        print(f"Duration: {duration}")
+        print()
+
 
 def print_table_sizes(table_sizes):
     print("============================")

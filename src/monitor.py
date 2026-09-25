@@ -1,3 +1,8 @@
+from datetime import timedelta
+
+
+
+
 def load_sql(filename):
     with open(filename) as file:
         content = file.read()
@@ -32,6 +37,16 @@ def get_database_size(connection):
         """
     )
 
+threshold = timedelta(minutes=5)
+def find_long_running_queries(queries):
+    long_running = []
+
+    for pid, user, sql, query_start, duration in queries:
+        if duration > threshold:
+            long_running.append((pid, user, sql, query_start, duration))
+
+    return long_running
+
 def get_active_queries(connection):
     query = load_sql("sql/activity.sql")
     return execute_all(
@@ -47,25 +62,8 @@ def get_table_sizes(connection):
         )
 
 def get_locks(connection):
-
+    query = load_sql("sql/locks.sql")
     return execute_all(
-        connection,
-        """
-        SELECT
-    waiting.pid AS waiting_pid,
-    waiting_activity.usename AS waiting_user,
-    waiting_activity.query AS waiting_query,
-    holding.pid AS holding_pid,
-    holding_activity.usename AS holding_user,
-    holding_activity.query AS holding_query
-FROM pg_locks AS waiting
-JOIN pg_locks AS holding
-    ON waiting.relation = holding.relation
-JOIN pg_stat_activity AS waiting_activity
-    ON waiting.pid = waiting_activity.pid
-JOIN pg_stat_activity AS holding_activity
-    ON holding.pid = holding_activity.pid
-WHERE waiting.granted = false
-  AND holding.granted = true AND waiting.pid <> holding.pid;
-        """
-    )
+            connection,
+            query
+        )

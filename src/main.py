@@ -4,13 +4,15 @@ from monitor import (
     get_database_size,
     get_active_queries,
     get_locks,
-    get_table_sizes
+    get_table_sizes,
+    find_long_running_queries
 )
 from report import (
     print_locks,
     print_report,
     print_active_queries,
-    print_table_sizes
+    print_table_sizes,
+    print_long_running_queries
 )
 
 
@@ -27,6 +29,9 @@ def run_monitor():
 
         queries = get_active_queries(connection)
         print_active_queries(queries)
+
+        queries_long = find_long_running_queries(queries)
+        print_long_running_queries(queries_long)
 
         locks = get_locks(connection)
         print_locks(locks)
