@@ -45,7 +45,10 @@ def get_connection():
         return connection # Возвращаем готовое подключение вызывающей функции
     
     # Ошибка подключения к PostgreSQL
-    except psycopg.OperationalError as error:
+    except psycopg.OperationalError as error: 
         print(error)
         return None
-        
+        # Проблемы с PostgreSQL:
+        #   сервер выключен;
+        #   неправильный пароль;
+        #   нет соединения
