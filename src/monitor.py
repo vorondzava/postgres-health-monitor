@@ -1,6 +1,6 @@
 from datetime import timedelta
 import os
-from config import LONG_QUERY_THRESHOLD
+from config import get_long_query_threshold
 
 
 
@@ -43,9 +43,9 @@ def get_database_size(connection):
 
 def find_long_running_queries(queries):
     long_running = []
-
+    threshold = get_long_query_threshold()
     for pid, user, sql, query_start, duration in queries:
-        if duration > LONG_QUERY_THRESHOLD:
+        if duration > threshold:
             long_running.append((pid, user, sql, query_start, duration))
 
     return long_running
