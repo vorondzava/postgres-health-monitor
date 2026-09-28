@@ -1,4 +1,4 @@
-from database import get_connection
+from database import check_connection, get_connection
 from monitor import (
     get_active_connections,
     get_database_size,
@@ -16,11 +16,16 @@ from report import (
 )
 
 
-def run_monitor():
+def run_monitor(): 
+    connection = None
     try:
         connection = get_connection() #Получаем подключение
         if connection is None:
             print("Could not connect to database")
+            return
+
+        if not check_connection(connection):
+            print("Database connection is not active")
             return
 
         active = get_active_connections(connection) #Передаём его в мониторинг

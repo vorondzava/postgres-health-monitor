@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 if load_dotenv():   # нашёлся ли файл .env и загрузились ли переменные окружения?
     print(".env loaded")
   
-def get_connection():
+def get_connection(): #установить соединение
     # Берём настройки подключения из переменных окружения
     host = os.getenv("DB_HOST")
     port = os.getenv("DB_PORT")
@@ -52,3 +52,13 @@ def get_connection():
         #   сервер выключен;
         #   неправильный пароль;
         #   нет соединения
+
+def check_connection(connection): #проверить существующее соединение
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        return True
+
+    except psycopg.Error as error:
+        print(f"Connection check failed: {error}")
+        return False
