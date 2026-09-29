@@ -8,15 +8,13 @@ from monitor import (
     find_long_running_queries
 )
 from report import (
-    print_locks,
-    print_report,
-    print_active_queries,
-    print_table_sizes,
-    print_long_running_queries
+    print_monitor_report
 )
+import time
 
 
 def run_monitor(): 
+    start_time = time.time()
     connection = None
     try:
         connection = get_connection() #Получаем подключение
@@ -29,23 +27,35 @@ def run_monitor():
             return
 
         active = get_active_connections(connection) #Передаём его в мониторинг
+        
         size = get_database_size(connection)
-        print_report(active,size)
 
         queries = get_active_queries(connection)
-        print_active_queries(queries)
 
         queries_long = find_long_running_queries(queries)
-        print_long_running_queries(queries_long)
 
         locks = get_locks(connection)
-        print_locks(locks)
 
         table_sizes = get_table_sizes(connection)
-        print_table_sizes(table_sizes)
-    finally:
+
+        report_data = {
+        "active_connections": active,
+        "database_size": size,
+        "active_queries": queries,
+        "long_running_queries": queries_long,
+        "locks": locks,
+        "table_sizes": table_sizes
+        }
+
+        print_monitor_report(report_data)
+        
+    finally: #Поэтому его часто используют для вещей, которые обязательно нужно выполнить
         if connection is not None:
             connection.close()
+
+        end_time = time.time()
+        print(f"Monitor completed in {end_time - start_time:.2f} seconds")
+    
 
 
 run_monitor()

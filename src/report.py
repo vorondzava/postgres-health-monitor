@@ -68,6 +68,7 @@ def print_table_sizes(table_sizes):
         print()
 
 def print_locks(locks):
+
     print("============================")
     print("Locks:")
     print("============================")
@@ -88,3 +89,25 @@ def print_locks(locks):
         print(f"Holding PID: {holding_pid}")
         print(f"Holding User: {holding_user}")
         print(f"Holding Query: {holding_query}")
+
+def print_monitor_report(report):
+    print_report(
+        report["active_connections"],
+        report["database_size"]
+    )
+
+    print_active_queries(
+        report["active_queries"]
+    )
+
+    print_long_running_queries(
+        report["long_running_queries"]
+    )
+
+    print_locks(
+        report["locks"]
+    )
+
+    print_table_sizes(
+        report["table_sizes"]
+    )
