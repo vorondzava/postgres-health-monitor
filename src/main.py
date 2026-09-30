@@ -8,6 +8,7 @@ from monitor import (
     find_long_running_queries
 )
 from report import (
+    get_monitor_status,
     print_monitor_report
 )
 import time
@@ -38,13 +39,16 @@ def run_monitor():
 
         table_sizes = get_table_sizes(connection)
 
+        status = get_monitor_status(queries_long, locks)
+
         report_data = {
         "active_connections": active,
         "database_size": size,
         "active_queries": queries,
         "long_running_queries": queries_long,
         "locks": locks,
-        "table_sizes": table_sizes
+        "table_sizes": table_sizes,
+        "status": status
         }
 
         print_monitor_report(report_data)

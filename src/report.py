@@ -51,7 +51,6 @@ def print_long_running_queries(queries):
         print(f"Duration: {duration}")
         print()
 
-
 def print_table_sizes(table_sizes):
     print("============================")
     print("Table sizes:")
@@ -91,6 +90,8 @@ def print_locks(locks):
         print(f"Holding Query: {holding_query}")
 
 def print_monitor_report(report):
+    print(f"Status: {report['status']}")
+
     print_report(
         report["active_connections"],
         report["database_size"]
@@ -111,3 +112,10 @@ def print_monitor_report(report):
     print_table_sizes(
         report["table_sizes"]
     )
+
+def get_monitor_status(has_long_queries, has_locks):
+    if  has_long_queries or has_locks:
+        return "Warning"
+    else:
+        return "OK"
+ 
