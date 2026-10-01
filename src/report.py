@@ -1,18 +1,14 @@
 def print_report(active_connections, database_size):
-    print("============================")
-    print(" PostgreSQL Health Monitor")
-    print("============================")
-    print()
-    print(f"Active connections: {active_connections}")
-    print(f"Database size: {database_size}")
+    print(f"    Active connections: {active_connections}")
+    print(f"    Database size: {database_size}")
     print()
 
 def print_active_queries(queries):
     print("============================")
-    print("Active queries:")
+    print(" Active queries:")
     print("============================")
     if not queries:
-        print("No active queries")
+        print("     No active queries")
         return
     
     for pid, user, sql, query_start, duration in queries:
@@ -21,20 +17,20 @@ def print_active_queries(queries):
             sql = sql[:100] + "..."
 
 
-        print("----------------------------")
-        print(f"PID:  {pid}")
-        print(f"User: {user}")
-        print(f"Query: {sql}")
-        print(f"Started: {query_start}")
-        print(f"Duration: {duration}")
+        print("------------------------------------")
+        print(f"    PID:  {pid}")
+        print(f"    User: {user}")
+        print(f"    Query: {sql}")
+        print(f"    Started: {query_start}")
+        print(f"    Duration: {duration}")
         print()
 
 def print_long_running_queries(queries):
     print("============================")
-    print("Long-running queries:")
+    print(" Long-running queries:")
     print("============================")
     if not queries:
-        print("No long-running queries")
+        print("     No long-running queries")
         return
     
     for pid, user, sql, query_start, duration in queries:
@@ -43,12 +39,12 @@ def print_long_running_queries(queries):
             sql = sql[:100] + "..."
 
 
-        print("----------------------------")
-        print(f"PID:  {pid}")
-        print(f"User: {user}")
-        print(f"Query: {sql}")
-        print(f"Started: {query_start}")
-        print(f"Duration: {duration}")
+        print("------------------------------------")
+        print(f"    PID:  {pid}")
+        print(f"    User: {user}")
+        print(f"    Query: {sql}")
+        print(f"    Started: {query_start}")
+        print(f"    Duration: {duration}")
         print()
 
 def print_table_sizes(table_sizes):
@@ -56,42 +52,47 @@ def print_table_sizes(table_sizes):
     print("Table sizes:")
     print("============================")
     if not table_sizes:
-        print("No table sizes")
+        print("     No table sizes")
         return
     
     for schemaname, tablename, size in table_sizes:
-        print("----------------------------")
-        print(f"Schema:  {schemaname}")
-        print(f"Table: {tablename}")
-        print(f"Size: {size}")
+        print("------------------------------------")
+        print(f"    Schema:  {schemaname}")
+        print(f"    Table: {tablename}")
+        print(f"    Size: {size}")
         print()
 
 def print_locks(locks):
 
     print("============================")
-    print("Locks:")
+    print(" Locks:")
     print("============================")
 
     if not locks:
-        print("No locks")
+        print("     No locks")
         return
     
     for waiting_pid, waiting_user, waiting_query, holding_pid, holding_user, holding_query in locks:
-        print("----------------------------")
+        print("------------------------------------")
 
-        print(f"Waiting PID: {waiting_pid}")
-        print(f"Waiting User: {waiting_user}")
-        print(f"Waiting Query: {waiting_query}")
+        print(f"    Waiting PID: {waiting_pid}")
+        print(f"    Waiting User: {waiting_user}")
+        print(f"    Waiting Query: {waiting_query}")
 
         print()
 
-        print(f"Holding PID: {holding_pid}")
-        print(f"Holding User: {holding_user}")
-        print(f"Holding Query: {holding_query}")
+        print(f"    Holding PID: {holding_pid}")
+        print(f"    Holding User: {holding_user}")
+        print(f"    Holding Query: {holding_query}")
 
 def print_monitor_report(report):
-    print(f"Status: {report['status']}")
+    print("============================")
+    print(" PostgreSQL Health Monitor")
+    print("============================")
 
+    print(f"Status: {report['status_info']['status']}")
+    print()
+    
     print_report(
         report["active_connections"],
         report["database_size"]
@@ -113,9 +114,23 @@ def print_monitor_report(report):
         report["table_sizes"]
     )
 
-def get_monitor_status(has_long_queries, has_locks):
-    if  has_long_queries or has_locks:
-        return "Warning"
-    else:
-        return "OK"
+def get_monitor_status(long_queries, locks):
+    reasons = []
+
+    if long_queries:
+        reasons.append(" -Long-running queries detected")
+
+    if locks:
+        reasons.append(" -Locks detected")
+
+    if reasons:
+        return {
+            "status": "WARNING",
+            "reasons": reasons
+        }
+
+    return {
+        "status": "OK",
+        "reasons": []
+    }
  

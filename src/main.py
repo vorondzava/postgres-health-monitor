@@ -48,7 +48,7 @@ def run_monitor():
         "long_running_queries": queries_long,
         "locks": locks,
         "table_sizes": table_sizes,
-        "status": status
+        "status_info": status
         }
 
         print_monitor_report(report_data)

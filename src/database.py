@@ -2,8 +2,8 @@ import os
 import psycopg
 from dotenv import load_dotenv
 
-if load_dotenv():   # нашёлся ли файл .env и загрузились ли переменные окружения?
-    print(".env loaded")
+load_dotenv()
+    
   
 def get_connection(): #установить соединение
     # Берём настройки подключения из переменных окружения
