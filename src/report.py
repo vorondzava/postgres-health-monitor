@@ -89,9 +89,11 @@ def print_monitor_report(report):
     print("============================")
     print(" PostgreSQL Health Monitor")
     print("============================")
-
-    print(f"Status: {report['status_info']['status']}")
     print()
+    print(f"Report time: {report['report_time'].strftime('%Y-%m-%d %H:%M:%S')}")
+    print()
+    print_status(report["status_info"])
+    
     
     print_report(
         report["active_connections"],
@@ -118,10 +120,10 @@ def get_monitor_status(long_queries, locks):
     reasons = []
 
     if long_queries:
-        reasons.append(" -Long-running queries detected")
+        reasons.append("Long-running queries detected")
 
     if locks:
-        reasons.append(" -Locks detected")
+        reasons.append("Locks detected")
 
     if reasons:
         return {
@@ -133,4 +135,14 @@ def get_monitor_status(long_queries, locks):
         "status": "OK",
         "reasons": []
     }
+
+def print_status(status_info):
+    print(f"Status: {status_info['status']}")
+
+    if status_info["reasons"]:
+        print("Reasons:")
+        for reason in status_info["reasons"]:
+            print(f" - {reason}")
+
+    print()
  

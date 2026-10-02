@@ -1,3 +1,4 @@
+from datetime import datetime
 from database import check_connection, get_connection
 from monitor import (
     get_active_connections,
@@ -16,6 +17,7 @@ import time
 
 def run_monitor(): 
     start_time = time.time()
+    report_time = datetime.now()
     connection = None
     try:
         connection = get_connection() #Получаем подключение
@@ -48,7 +50,8 @@ def run_monitor():
         "long_running_queries": queries_long,
         "locks": locks,
         "table_sizes": table_sizes,
-        "status_info": status
+        "status_info": status,
+        "report_time": report_time
         }
 
         print_monitor_report(report_data)
