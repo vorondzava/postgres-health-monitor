@@ -22,11 +22,24 @@ def execute_all(connection, query):
         result = cursor.fetchall() 
         return result
 
+def execute_row(connection, query):
+    with connection.cursor() as cursor:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            return result
+
+
 def get_active_connections(connection):
-    return execute_one(
-        connection,
-        "SELECT count(*) FROM pg_stat_activity;"
+    return execute_row(
+        connection,"""
+        SELECT count(*) AS current_connections,
+        current_setting('max_connections')::integer as max_connections 
+        FROM pg_stat_activity;
+        """
     )
+
+
+    
 
 def get_database_size(connection):
     return execute_one(

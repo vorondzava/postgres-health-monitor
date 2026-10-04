@@ -1,5 +1,6 @@
-def print_report(active_connections, database_size):
-    print(f"    Active connections: {active_connections}")
+def print_report(current_connections, max_connections, connection_usage, database_size):
+    print(f"    Active connections: {current_connections} / {max_connections}")
+    print(f"    Connection usage: {connection_usage:.0f}%")
     print(f"    Database size: {database_size}")
     print()
 
@@ -96,8 +97,10 @@ def print_monitor_report(report):
     
     
     print_report(
-        report["active_connections"],
-        report["database_size"]
+        report["current_connections"],
+        report["max_connections"],
+        report["connection_usage"],
+        report["database_size"],
     )
 
     print_active_queries(

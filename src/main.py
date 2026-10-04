@@ -29,7 +29,9 @@ def run_monitor():
             print("Database connection is not active")
             return
 
-        active = get_active_connections(connection) #Передаём его в мониторинг
+        current_connections, max_connections = get_active_connections(connection) #Получаем текущее и максимальное количество подключений
+
+        connection_usage = (current_connections/max_connections)*100
         
         size = get_database_size(connection)
 
@@ -44,7 +46,9 @@ def run_monitor():
         status = get_monitor_status(queries_long, locks)
 
         report_data = {
-        "active_connections": active,
+        "current_connections": current_connections,
+        "max_connections": max_connections,
+        "connection_usage": connection_usage,
         "database_size": size,
         "active_queries": queries,
         "long_running_queries": queries_long,
