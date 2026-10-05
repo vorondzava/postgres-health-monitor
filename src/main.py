@@ -43,7 +43,7 @@ def run_monitor():
 
         table_sizes = get_table_sizes(connection)
 
-        status = get_monitor_status(queries_long, locks)
+        status = get_monitor_status(queries_long, connection_usage)
 
         report_data = {
         "current_connections": current_connections,

@@ -53,7 +53,6 @@ def get_database_size(connection):
 
 
 
-
 def find_long_running_queries(queries):
     long_running = []
     threshold = get_long_query_threshold()
