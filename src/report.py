@@ -119,17 +119,17 @@ def print_monitor_report(report):
         report["table_sizes"]
     )
 
-def get_monitor_status(long_queries, connection_usage):
+def get_monitor_status(long_queries, connection_usage, warning_threshold, critical_threshold):
     reasons = []
     critical = False
 
     if long_queries:
         reasons.append("Long-running queries detected")
 
-    if connection_usage >= 90:
+    if connection_usage >= critical_threshold:
         reasons.append("Connection usage is critically high")
         critical = True
-    elif connection_usage >= 80:
+    elif connection_usage >= warning_threshold:
         reasons.append("Connection usage is high")
 
     if critical:

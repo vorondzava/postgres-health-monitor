@@ -1,4 +1,5 @@
 from datetime import datetime
+from config import get_connection_usage_critical, get_connection_usage_warning
 from database import check_connection, get_connection
 from monitor import (
     get_active_connections,
@@ -43,7 +44,11 @@ def run_monitor():
 
         table_sizes = get_table_sizes(connection)
 
-        status = get_monitor_status(queries_long, connection_usage)
+        warning_threshold = get_connection_usage_warning()
+
+        critical_threshold = get_connection_usage_critical()
+        
+        status = get_monitor_status(queries_long, connection_usage, warning_threshold, critical_threshold)
 
         report_data = {
         "current_connections": current_connections,
