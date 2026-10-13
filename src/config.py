@@ -25,6 +25,12 @@ def get_int_setting(name, default, min_value, max_value):
 
     return  value
 
+def get_connection_usage_thresholds(warning_threshold, critical_threshold):
+    if warning_threshold < critical_threshold:
+        return warning_threshold, critical_threshold
+    else:
+        raise ValueError("CONNECTION_USAGE_WARNING must be lower than CONNECTION_USAGE_CRITICAL")
+
 def get_connection_usage_critical():
     return get_int_setting("CONNECTION_USAGE_CRITICAL",90,1,100)
 

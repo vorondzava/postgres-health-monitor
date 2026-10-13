@@ -39,15 +39,15 @@ def get_connection(): #установить соединение
             port=port,
             dbname=database,
             user=user,
-            password=password
+            password=password,
+            connect_timeout=5
         )
         
         return connection # Возвращаем готовое подключение вызывающей функции
     
     # Ошибка подключения к PostgreSQL
     except psycopg.OperationalError as error: 
-        print(error)
-        return None
+        raise
         # Проблемы с PostgreSQL:
         #   сервер выключен;
         #   неправильный пароль;

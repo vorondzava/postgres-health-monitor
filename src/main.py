@@ -1,5 +1,7 @@
 from datetime import datetime
-from config import get_connection_usage_critical, get_connection_usage_warning
+
+import psycopg
+from config import get_connection_usage_critical, get_connection_usage_thresholds, get_connection_usage_warning
 from database import check_connection, get_connection
 from monitor import (
     get_active_connections,
@@ -22,9 +24,7 @@ def run_monitor():
     connection = None
     try:
         connection = get_connection() #Получаем подключение
-        if connection is None:
-            print("Could not connect to database")
-            return
+        
 
         if not check_connection(connection):
             print("Database connection is not active")
@@ -45,8 +45,10 @@ def run_monitor():
         table_sizes = get_table_sizes(connection)
 
         warning_threshold = get_connection_usage_warning()
-
+        
         critical_threshold = get_connection_usage_critical()
+
+        warning_threshold, critical_threshold = get_connection_usage_thresholds(warning_threshold, critical_threshold)
         
         status = get_monitor_status(queries_long, connection_usage, warning_threshold, critical_threshold)
 
@@ -64,13 +66,23 @@ def run_monitor():
         }
 
         print_monitor_report(report_data)
+
+        
+        print("Monitor completed successfully")
+
+    except ValueError as error:
+        print(f"Configuration error: {error}")
+        raise
+
+    except psycopg.OperationalError as error:
+        print(f"Database connection error: {error}")
         
     finally: #Поэтому его часто используют для вещей, которые обязательно нужно выполнить
         if connection is not None:
             connection.close()
 
         end_time = time.time()
-        print(f"Monitor completed in {end_time - start_time:.2f} seconds")
+        print(f"Execution time: {end_time - start_time:.2f} seconds")
     
 
 
