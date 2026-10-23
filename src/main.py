@@ -1,21 +1,39 @@
 from datetime import datetime
 
 import psycopg
-from config import get_connection_usage_critical, get_connection_usage_thresholds, get_connection_usage_warning
-from database import check_connection, get_connection
+from config import (
+    get_connection_usage_critical, 
+    get_connection_usage_thresholds, 
+    get_connection_usage_warning
+)
+from database import (
+    check_connection, 
+    get_connection
+)
 from monitor import (
     get_active_connections,
     get_database_size,
     get_active_queries,
     get_locks,
     get_table_sizes,
-    find_long_running_queries
+    find_long_running_queries,
+    get_test
 )
 from report import (
     get_monitor_status,
     print_monitor_report
 )
 import time
+import logging
+
+
+logging.basicConfig(
+    filename="monitor.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    encoding="utf-8"
+)
+
 
 
 def run_monitor(): 
@@ -29,6 +47,8 @@ def run_monitor():
         if not check_connection(connection):
             print("Database connection is not active")
             return
+
+        
 
         current_connections, max_connections = get_active_connections(connection) #Получаем текущее и максимальное количество подключений
 
@@ -51,6 +71,13 @@ def run_monitor():
         warning_threshold, critical_threshold = get_connection_usage_thresholds(warning_threshold, critical_threshold)
         
         status = get_monitor_status(queries_long, connection_usage, warning_threshold, critical_threshold)
+        reasons_text = ", ".join(status["reasons"])
+        if status["status"] == "WARNING":
+            logging.warning(f"WARNING - Monitor status: WARNING - {reasons_text}")
+        elif status["status"] == "CRITICAL":
+            logging.error(f"ERROR - Monitor status: CRITICAL - {reasons_text}")
+
+        #
 
         report_data = {
         "current_connections": current_connections,
@@ -68,21 +95,25 @@ def run_monitor():
         print_monitor_report(report_data)
 
         
-        print("Monitor completed successfully")
+        logging.info("Monitor completed successfully")
 
     except ValueError as error:
         print(f"Configuration error: {error}")
         raise
 
     except psycopg.OperationalError as error:
-        print(f"Database connection error: {error}")
+        logging.error(f"Database connection error: {error}")
+
+    except psycopg.Error as error:
+        logging.exception(f"Database query error: {error}")
+        return 
         
     finally: #Поэтому его часто используют для вещей, которые обязательно нужно выполнить
         if connection is not None:
             connection.close()
 
         end_time = time.time()
-        print(f"Execution time: {end_time - start_time:.2f} seconds")
+        logging.info(f"Execution time: {end_time - start_time:.2f} seconds")
     
 
 
