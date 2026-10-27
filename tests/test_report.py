@@ -1,6 +1,7 @@
 import pytest
 
 from config import get_connection_usage_critical, get_connection_usage_thresholds, get_connection_usage_warning
+from database import get_connection
 from report import get_monitor_status
 
 
@@ -69,3 +70,17 @@ def test_get_connection_usage_critical_custom_value(monkeypatch):
     monkeypatch.setenv("CONNECTION_USAGE_CRITICAL", "95")
     result = get_connection_usage_critical()
     assert result == 95
+
+def test_monitor_status_long_queries_and_status_connections():
+    result = get_monitor_status(["slow query"],85,80,90)
+    assert result["status"] == "WARNING"
+    assert result["reasons"] == ["Long-running queries detected","Connection usage is high"]
+
+
+def test_get_connection_absence_value(monkeypatch):
+    monkeypatch.setenv("DB_HOST","localhost")
+    monkeypatch.setenv("DB_NAME","test_db")
+    monkeypatch.setenv("DB_USER","test_user")
+    monkeypatch.delenv("DB_PASSWORD", raising=False)
+    result = get_connection()
+    assert result is None

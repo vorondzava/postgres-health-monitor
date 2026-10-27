@@ -16,8 +16,7 @@ from monitor import (
     get_active_queries,
     get_locks,
     get_table_sizes,
-    find_long_running_queries,
-    get_test
+    find_long_running_queries
 )
 from report import (
     get_monitor_status,
@@ -42,7 +41,9 @@ def run_monitor():
     connection = None
     try:
         connection = get_connection() #Получаем подключение
-        
+
+        if connection is None:
+            return
 
         if not check_connection(connection):
             print("Database connection is not active")
